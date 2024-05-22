@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TournamentAPI", "Tournament
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TournamentCore", "TournamentCore\TournamentCore.csproj", "{FCC84291-D761-4C95-BD6B-FFDC252F0A2B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TournamentData", "TournamentData\TournamentData.csproj", "{8EE7E068-602E-482D-BE8C-9DF818BBC386}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{FCC84291-D761-4C95-BD6B-FFDC252F0A2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FCC84291-D761-4C95-BD6B-FFDC252F0A2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FCC84291-D761-4C95-BD6B-FFDC252F0A2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EE7E068-602E-482D-BE8C-9DF818BBC386}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EE7E068-602E-482D-BE8C-9DF818BBC386}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EE7E068-602E-482D-BE8C-9DF818BBC386}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EE7E068-602E-482D-BE8C-9DF818BBC386}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
