@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TournamentData.Data;
+using TournamentAPI.Extensions;
+
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<TournamentAPIContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("TournamentAPIContext") ?? throw new InvalidOperationException("Connection string 'TournamentAPIContext' not found.")));
@@ -14,6 +17,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+await app.SeedDataAsync();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
