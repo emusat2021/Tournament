@@ -1,4 +1,9 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using TournamentAPI.Data;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<TournamentAPIContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("TournamentAPIContext") ?? throw new InvalidOperationException("Connection string 'TournamentAPIContext' not found.")));
 
 // Add services to the container.
 
