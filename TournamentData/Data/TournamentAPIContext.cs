@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using TournamentCore.Entities;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace TournamentAPI.Data
+namespace TournamentData.Data
 {
     public class TournamentAPIContext : DbContext
     {
