@@ -14,6 +14,9 @@ namespace TournamentData
 
         public static async Task InitAsync(TournamentAPIContext context)
         {
+            // Ensure the db is created and apply migrations
+            await context.Database.MigrateAsync();
+
             if (await context.Tournament.AnyAsync()) return;
 
             Tournament[] tournaments = GenerateTournaments();
@@ -29,8 +32,8 @@ namespace TournamentData
 
         private static Game[] GenerateGames()
         {
-            return
-            [
+            return new Game[]
+            {
                 new Game()
                 {
                     Id = 1,
@@ -52,13 +55,13 @@ namespace TournamentData
                     Time = DateTime.Now.AddMonths(2),
                     TournamentId = 2
                 },
-            ];
+            };
         }
 
         private static Tournament[] GenerateTournaments()
         {
-            return
-            [
+            return new Tournament[]
+            {
                 new Tournament()
                 {
                     Id = 1,
@@ -71,7 +74,7 @@ namespace TournamentData
                     Title = "Second",
                     StartDate = DateTime.Now.AddMonths(1),
                 },
-            ];
+            };
         }
     }
 }
