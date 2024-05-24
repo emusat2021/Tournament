@@ -5,7 +5,9 @@ using TournamentCore.Entities;
 
 namespace TournamentAPI.Controllers
 {
-    public class TournamentsController : Controller
+    [ApiController]
+    [Route("api/tornaments")]
+    public class TournamentsController : ControllerBase
     {
         private readonly TournamentAPIContext _context;
 
@@ -14,16 +16,22 @@ namespace TournamentAPI.Controllers
             _context = context;
         }
 
-        // GET: Tournaments
-        public async Task<IActionResult> Index()
+        // GET: api/Tournaments
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Tournament>>> GetTournament()
         {
-            return View(await _context.Tournament.ToListAsync());
+            if (_context.Tournament == null)
+            {
+                return NotFound();
+            }
+            return await _context.Tournament.ToListAsync();
         }
 
-        // GET: Tournaments/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: api/Tournaments/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Tournament>> GetTournamentById(int? id)
         {
-            if (id == null)
+            if (_context.Tournament == null)
             {
                 return NotFound();
             }
@@ -35,113 +43,59 @@ namespace TournamentAPI.Controllers
                 return NotFound();
             }
 
-            return View(tournament);
+            return tournament;
         }
 
-        // GET: Tournaments/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Tournaments/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: api/tournament
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,StartDate")] Tournament tournament)
+        public async Task<ActionResult<Tournament>> Create(Tournament tournament)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(tournament);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(tournament);
+            _context.Tournament.Add(tournament);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetTournamentById), new { id = tournament.Id }, tournament);
+
         }
 
-        // GET: Tournaments/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var tournament = await _context.Tournament.FindAsync(id);
-            if (tournament == null)
-            {
-                return NotFound();
-            }
-            return View(tournament);
-        }
-
-        // POST: Tournaments/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,StartDate")] Tournament tournament)
+        // PUT api/tournament
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditTournament(int id, Tournament tournament)
         {
             if (id != tournament.Id)
             {
-                return NotFound();
+                return BadRequest();
             }
-
-            if (ModelState.IsValid)
+            _context.Entry(tournament).State = EntityState.Modified;
+            try
             {
-                try
-                {
-                    _context.Update(tournament);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TournamentExists(tournament.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                await _context.SaveChangesAsync();
             }
-            return View(tournament);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TournamentExists(id))
+                {
+                    return NotFound();
+                }
+                else { throw; }
+            }
+            return NoContent();
         }
 
-        // GET: Tournaments/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        //DELETE: api/tournament
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Tournament>> DeleteTournament(int id)
         {
-            if (id == null)
+            if(_context.Tournament == null)
             {
                 return NotFound();
             }
-
-            var tournament = await _context.Tournament
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (tournament == null)
-            {
-                return NotFound();
-            }
-
-            return View(tournament);
-        }
-
-        // POST: Tournaments/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
             var tournament = await _context.Tournament.FindAsync(id);
-            if (tournament != null)
+            if(tournament == null)
             {
-                _context.Tournament.Remove(tournament);
+                return NotFound();
             }
-
+            _context.Tournament.Remove(tournament);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return NoContent();
         }
 
         private bool TournamentExists(int id)
