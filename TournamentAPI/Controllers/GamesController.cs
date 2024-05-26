@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TournamentData.Data;
 using TournamentCore.Entities;
+using System.Text.Json.Serialization;
 
 namespace TournamentAPI.Controllers
 {
@@ -16,7 +17,7 @@ namespace TournamentAPI.Controllers
             _context = context;
         }
 
-        // GET: api/Games
+        // GET: api/games
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Game>>> GetGames()
         {
@@ -27,16 +28,16 @@ namespace TournamentAPI.Controllers
             return await _context.Game.ToListAsync();
         }
 
-        // GET: api/Games//5
+        // GET: api/games/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Game>> GetGameById(int? id)
+        public async Task<ActionResult<Game>> GetGameById(int id)
         {
             if (_context.Game == null)
             {
                 return NotFound();
             }
-            var game = await _context.Game
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var game = await _context.Game.FindAsync(id);
+            
             if (game == null)
             {
                 return NotFound();
