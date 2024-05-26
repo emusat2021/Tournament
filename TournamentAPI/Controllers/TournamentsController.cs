@@ -2,11 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using TournamentData.Data;
 using TournamentCore.Entities;
+using System.Text.Json.Serialization;
 
 namespace TournamentAPI.Controllers
 {
     [ApiController]
-    [Route("api/tornaments")]
+    [Route("api/tournaments")]
     public class TournamentsController : ControllerBase
     {
         private readonly TournamentAPIContext _context;
@@ -16,7 +17,7 @@ namespace TournamentAPI.Controllers
             _context = context;
         }
 
-        // GET: api/Tournaments
+        // GET: api/tournaments
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Tournament>>> GetTournament()
         {
@@ -24,26 +25,58 @@ namespace TournamentAPI.Controllers
             {
                 return NotFound();
             }
-            return await _context.Tournament.ToListAsync();
+            //return await _context.Tournament.Include(t => t.Games) // Eager loading of Games
+            // .ToListAsync();
+            var tournaments = await _context.Tournament
+                   .Include(t => t.Games)
+                   .Select(t => new Tournament
+                   {
+                       Id = t.Id,
+                       Title = t.Title,
+                       StartDate = t.StartDate,
+                       Games = t.Games.Select(g => new Game
+                       {
+                           Id = g.Id,
+                           Title = g.Title,
+                           Time = g.Time
+                       }).ToList()
+                   })
+                   .ToListAsync();
+            return Ok(tournaments);
         }
 
-        // GET: api/Tournaments/5
+        // GET: api/tournaments/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Tournament>> GetTournamentById(int? id)
+        public async Task<ActionResult<Tournament>> GetTournamentById(int id)
         {
             if (_context.Tournament == null)
             {
                 return NotFound();
             }
 
+            //var tournament = await _context.Tournament.Include(g => g.Games).FirstOrDefaultAsync(i => i.Id == id);
             var tournament = await _context.Tournament
-                .FirstOrDefaultAsync(m => m.Id == id);
+                                       .Include(t => t.Games)
+                                       .Where(t => t.Id == id)
+                                       .Select(t => new Tournament
+                                       {
+                                           Id = t.Id,
+                                           Title = t.Title,
+                                           StartDate = t.StartDate,
+                                           Games = t.Games.Select(g => new Game
+                                           {
+                                               Id = g.Id,
+                                               Title = g.Title,
+                                               Time = g.Time
+                                           }).ToList()
+                                       })
+                                       .FirstOrDefaultAsync();
             if (tournament == null)
             {
                 return NotFound();
             }
 
-            return tournament;
+            return Ok(tournament);
         }
 
         // POST: api/tournament
