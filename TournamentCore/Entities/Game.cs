@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace TournamentCore.Entities
 {
     public class Game
@@ -12,5 +13,6 @@ namespace TournamentCore.Entities
         public string Title { get; set; }
         public DateTime Time { get; set; }
         public int TournamentId { get; set; }
+        public Tournament Tournament { get; set; }
     }
 }
