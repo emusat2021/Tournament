@@ -22,40 +22,9 @@ namespace TournamentData
             Tournament[] tournaments = GenerateTournaments();
             await context.Tournament.AddRangeAsync(tournaments);
 
-            Game[] games = GenerateGames();
-            await context.Game.AddRangeAsync(games);
-
             await context.SaveChangesAsync();
 
 
-        }
-
-        private static Game[] GenerateGames()
-        {
-            return new Game[]
-            {
-                new Game()
-                {
-                    Id = 1,
-                    Title = "T1GameOne",
-                    Time = DateTime.Now,
-                    TournamentId = 1,
-                },
-                new Game()
-                {
-                    Id = 2,
-                    Title = "T1GameTwo",
-                    Time = DateTime.Now.AddMonths(1),
-                    TournamentId = 1
-                },
-                new Game()
-                {
-                    Id = 3,
-                    Title = "T2GameTwo",
-                    Time = DateTime.Now.AddMonths(2),
-                    TournamentId = 2
-                },
-            };
         }
 
         private static Tournament[] GenerateTournaments()
@@ -67,12 +36,36 @@ namespace TournamentData
                     Id = 1,
                     Title = "First",
                     StartDate = DateTime.Now,
+                    Games = new List<Game>
+
+                    { new Game()
+                        {
+                            Id = 1,
+                            Title = "T1GameOne",
+                            Time = DateTime.Now,
+                        },
+                        new Game()
+                        {
+                            Id = 2,
+                            Title = "T1GameTwo",
+                            Time = DateTime.Now.AddMonths(1),
+                        }
+                    }
                 },
                 new Tournament()
                 {
                     Id = 2,
                     Title = "Second",
                     StartDate = DateTime.Now.AddMonths(1),
+                    Games = new List<Game>
+                    {
+                        new Game()
+                        {
+                            Id = 3,
+                            Title = "T2GameOne",
+                            Time = DateTime.Now.AddMonths(2),
+                        }
+                    }
                 },
             };
         }
