@@ -5,6 +5,13 @@ namespace TournamentData
 {
     public class TournamentRepository : ITournamentRepository
     {
+        private readonly TournamentRepository _context;
+
+        public TournamentRepository(TournamentRepository context)
+        {
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+        }
+
         void ITournamentRepository.Add(Tournament tournament)
         {
             throw new NotImplementedException();
