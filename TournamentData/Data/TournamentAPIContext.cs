@@ -16,33 +16,6 @@ namespace TournamentData.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<Tournament>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Title)
-                      .IsRequired()
-                      .HasMaxLength(100);
-                entity.Property(e => e.StartDate)
-                      .IsRequired();
-
-                // Configure one-to-many relationship
-                entity.HasMany(e => e.Games)
-                      .WithOne(g => g.Tournament)
-                      .HasForeignKey(g => g.TournamentId)
-                      .OnDelete(DeleteBehavior.Cascade);
-            });
-
-            // Configure Game entity
-            modelBuilder.Entity<Game>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Title)
-                      .IsRequired()
-                      .HasMaxLength(100);
-                entity.Property(e => e.Time)
-                      .IsRequired();
-            });
         }
     }
 }
